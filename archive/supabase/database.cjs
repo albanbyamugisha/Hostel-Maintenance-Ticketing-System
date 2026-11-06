@@ -1,0 +1,25 @@
+const {PGlite}=require(process.env.PGLITE_MODULE || '@electric-sql/pglite');
+const fs=require('fs');
+const {pgcrypto}=require(require('node:path').join(require('node:path').dirname(require.resolve(process.env.PGLITE_MODULE || '@electric-sql/pglite')), 'contrib/pgcrypto.cjs'));
+(async()=>{
+ process.chdir(require('node:path').resolve(__dirname,'..'));
+ const db=new PGlite({extensions:{pgcrypto}});
+ await db.exec(`create role anon; create role authenticated; create schema auth; create schema storage;
+ create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub', true),'')::uuid$$;
+ create table auth.users(id uuid primary key, email text, raw_user_meta_data jsonb default '{}', instance_id uuid, aud text, role text, encrypted_password text,email_confirmed_at timestamptz,last_sign_in_at timestamptz,raw_app_meta_data jsonb,created_at timestamptz,updated_at timestamptz,confirmation_token text,email_change text,email_change_token_new text,recovery_token text);
+ create table auth.identities(id uuid primary key,user_id uuid,provider_id text,identity_data jsonb,provider text,last_sign_in_at timestamptz,created_at timestamptz,updated_at timestamptz,unique(provider_id,provider));
+ create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
+ create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text,name text,owner uuid,owner_id text);
+ alter table storage.objects enable row level security;
+ grant usage on schema public,auth,storage to authenticated,anon;
+ grant select,insert,update,delete on storage.objects to authenticated;
+ create publication supabase_realtime;
+`);
+ const schema=fs.readFileSync('supabase/schema.sql','utf8');
+ await db.exec(schema);console.log('schema applied');await db.exec(schema);console.log('schema idempotence passed');
+ const seed=fs.readFileSync('supabase/seed.sql','utf8');
+ await db.exec(seed);await db.exec(seed);console.log('seed applied twice');
+ console.log((await db.query('select status,count(*) from tickets group by status')).rows);
+ await require('./database-cases.cjs')(db);
+ await db.close();
+})().catch(e=>{console.error(e.message,e.query?.slice(0,500));process.exitCode=1});

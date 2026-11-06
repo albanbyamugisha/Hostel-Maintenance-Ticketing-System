@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>HostelCare · Maintenance desk</title>
+    <meta
+      name="description"
+      content="Report hostel maintenance issues, track repairs and keep every job accountable. HostelCare is the maintenance ticketing desk for residents, technicians and administrators."
+    />
+    <meta name="theme-color" content="#f5f2ea" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="application-name" content="HostelCare" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="HostelCare" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="./icons/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png" />
+
+    <link rel="stylesheet" href="./css/tokens.css" />
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/components.css" />
+    <link rel="stylesheet" href="./css/layout.css" />
+
+    <script>
+      /* Apply the saved theme before first paint to avoid a flash. */
+      try {
+        var stored = localStorage.getItem("hmt-theme");
+        if (stored === "light" || stored === "dark") {
+          document.documentElement.dataset.theme = stored;
+          document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute("content", stored === "dark" ? "#0b1210" : "#f5f2ea");
+        }
+      } catch (error) {
+        /* Private mode can block storage; the default theme is fine. */
+      }
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <div class="auth-main">
+        <div class="auth-card card">
+          <div class="card__body stack">
+            <h1 class="page-title">JavaScript is required</h1>
+            <p class="page-sub">
+              HostelCare is an interactive app. Please enable JavaScript in your browser and
+              reload this page.
+            </p>
+          </div>
+        </div>
+      </div>
+    </noscript>
+
+    <div id="app"></div>
+    <div id="modal-root"></div>
+
+    <script>
+      // Register before module loading so an old cached module cannot prevent
+      // the app from upgrading to a new local edition.
+      if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+        const wasControlled = Boolean(navigator.serviceWorker.controller);
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (wasControlled) location.reload();
+        }, { once: true });
+        navigator.serviceWorker.register("./sw.js").catch(console.warn);
+      }
+    </script>
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>

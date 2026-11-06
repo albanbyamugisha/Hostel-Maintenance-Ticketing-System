@@ -1,0 +1,311 @@
+/* ==========================================================================
+   HostelCare — design tokens
+   Light is the default; dark follows prefers-color-scheme unless the user
+   has chosen a theme explicitly via [data-theme].
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* Type */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+    Palatino, Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.1875rem;
+  --text-xl: clamp(1.25rem, 1.12rem + 0.55vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.3rem + 0.9vw, 1.875rem);
+  --display: clamp(1.75rem, 1.35rem + 1.9vw, 2.75rem);
+  --display-sm: clamp(1.4rem, 1.2rem + 1vw, 1.9rem);
+
+  /* Spacing */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --page-max: 80rem;
+  --prose-max: 68ch;
+
+  /* Shape */
+  --radius-xs: 6px;
+  --radius-sm: 9px;
+  --radius: 13px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  /* Colour — light */
+  --bg: #f5f2ea;
+  --bg-elevated: #faf8f2;
+  --surface: #fffdf8;
+  --surface-2: #f0ece1;
+  --surface-3: #e7e2d5;
+  --ink: #18221f;
+  --ink-2: #3f4e49;
+  --muted: #63716c;
+  --line: #ddd8cb;
+  --line-strong: #c7c0af;
+  --brand: #0b5d4b;
+  --brand-hover: #084a3c;
+  --brand-ink: #ffffff;
+  --brand-soft: #e0f0ea;
+  --brand-soft-ink: #0a5142;
+  --accent: #a34f08;
+  --accent-hover: #853f05;
+  --accent-ink: #ffffff;
+  --accent-soft: #fbeed6;
+  --accent-soft-ink: #7a3b05;
+  --danger: #b42318;
+  --danger-hover: #8f1d15;
+  --danger-btn-bg: #b42318;
+  --danger-btn-hover: #8f1d15;
+  --danger-btn-ink: #ffffff;
+  --danger-soft: #fbe7e5;
+  --danger-soft-ink: #8f1d15;
+  --warning: #8a5300;
+  --warning-soft: #fff1cf;
+  --warning-soft-ink: #714400;
+  --success: #0b624c;
+  --success-soft: #dcf1e8;
+  --success-soft-ink: #08513f;
+  --info: #22517f;
+  --info-soft: #e6eef8;
+  --info-soft-ink: #1c4268;
+  --focus: #9a4a06;
+  --overlay: rgba(12, 24, 20, 0.55);
+  --shadow-sm: 0 1px 2px rgba(24, 34, 31, 0.06),
+    0 1px 1px rgba(24, 34, 31, 0.04);
+  --shadow: 0 8px 24px -12px rgba(24, 34, 31, 0.22),
+    0 2px 6px rgba(24, 34, 31, 0.05);
+  --shadow-lg: 0 28px 70px -28px rgba(16, 30, 26, 0.35),
+    0 8px 22px -12px rgba(16, 30, 26, 0.16);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --hero-glow: rgba(11, 93, 75, 0.14);
+
+  /* Status colours — light */
+  --st-reported-bg: #e8eef8;
+  --st-reported-ink: #1f4a73;
+  --st-reported-dot: #3a72a8;
+  --st-assigned-bg: #eae9fb;
+  --st-assigned-ink: #38357c;
+  --st-assigned-dot: #5a55c4;
+  --st-in-progress-bg: #fff1cf;
+  --st-in-progress-ink: #764800;
+  --st-in-progress-dot: #c07a00;
+  --st-on-hold-bg: #fdeadd;
+  --st-on-hold-ink: #8a3a12;
+  --st-on-hold-dot: #cf6327;
+  --st-resolved-bg: #dcf3e9;
+  --st-resolved-ink: #0a5744;
+  --st-resolved-dot: #118767;
+  --st-closed-bg: #e7ece9;
+  --st-closed-ink: #35433e;
+  --st-closed-dot: #697d75;
+  --st-reopened-bg: #fce6e4;
+  --st-reopened-ink: #8d1c15;
+  --st-reopened-dot: #c33227;
+
+  /* Severity — light */
+  --sev-low-bg: #ecefe9;
+  --sev-low-ink: #44514b;
+  --sev-medium-bg: #e6eef8;
+  --sev-medium-ink: #1f4a73;
+  --sev-high-bg: #fdeadd;
+  --sev-high-ink: #8a3a12;
+  --sev-emergency-bg: #b42318;
+  --sev-emergency-ink: #ffffff;
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 320ms;
+
+  /* Layers */
+  --z-tabbar: 40;
+  --z-topbar: 50;
+  --z-panel: 60;
+  --z-overlay: 80;
+  --z-modal: 90;
+  --z-toast: 100;
+}
+
+/* --------------------------------------------------------------------------
+   Dark theme. Explicit choice wins; otherwise follow the OS.
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0b1210;
+  --bg-elevated: #0f1715;
+  --surface: #141d1a;
+  --surface-2: #1a2521;
+  --surface-3: #22302a;
+  --ink: #edf3ef;
+  --ink-2: #c4cfc9;
+  --muted: #92a39b;
+  --line: #28362f;
+  --line-strong: #3a4a42;
+  --brand: #59d7b5;
+  --brand-hover: #82e6cb;
+  --brand-ink: #05221a;
+  --brand-soft: #12352c;
+  --brand-soft-ink: #96ecd4;
+  --accent: #f3b75f;
+  --accent-hover: #f8c982;
+  --accent-ink: #2a1b02;
+  --accent-soft: #39290f;
+  --accent-soft-ink: #f7ca88;
+  --danger: #ff8a80;
+  --danger-hover: #ffaea6;
+  --danger-btn-bg: #a9352c;
+  --danger-btn-hover: #bf3f35;
+  --danger-btn-ink: #ffeceb;
+  --danger-soft: #3c1714;
+  --danger-soft-ink: #ffb4ad;
+  --warning: #f3c365;
+  --warning-soft: #3a2b0c;
+  --warning-soft-ink: #f8d795;
+  --success: #6ee7b7;
+  --success-soft: #10372b;
+  --success-soft-ink: #9af0cf;
+  --info: #9bc7fb;
+  --info-soft: #162a44;
+  --info-soft-ink: #bcd9fc;
+  --focus: #fcd34d;
+  --overlay: rgba(0, 0, 0, 0.68);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.7),
+    0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 34px 80px -30px rgba(0, 0, 0, 0.85),
+    0 10px 26px -14px rgba(0, 0, 0, 0.5);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --hero-glow: rgba(89, 215, 181, 0.16);
+
+  --st-reported-bg: #172a3e;
+  --st-reported-ink: #a8cdf0;
+  --st-reported-dot: #6aa9e0;
+  --st-assigned-bg: #242145;
+  --st-assigned-ink: #c2bdfa;
+  --st-assigned-dot: #8c85ef;
+  --st-in-progress-bg: #3a2c0c;
+  --st-in-progress-ink: #f7ce7e;
+  --st-in-progress-dot: #e3a62e;
+  --st-on-hold-bg: #3d2113;
+  --st-on-hold-ink: #f6b895;
+  --st-on-hold-dot: #e77c42;
+  --st-resolved-bg: #10382c;
+  --st-resolved-ink: #93efcd;
+  --st-resolved-dot: #3bc59d;
+  --st-closed-bg: #202c27;
+  --st-closed-ink: #b4c3bc;
+  --st-closed-dot: #8ba198;
+  --st-reopened-bg: #3e1815;
+  --st-reopened-ink: #ffb0a8;
+  --st-reopened-dot: #f26a5f;
+
+  --sev-low-bg: #202a26;
+  --sev-low-ink: #b7c4bd;
+  --sev-medium-bg: #172a3e;
+  --sev-medium-ink: #a8cdf0;
+  --sev-high-bg: #3d2113;
+  --sev-high-ink: #f6b895;
+  --sev-emergency-bg: #e5483b;
+  --sev-emergency-ink: #1a0604;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg: #0b1210;
+    --bg-elevated: #0f1715;
+    --surface: #141d1a;
+    --surface-2: #1a2521;
+    --surface-3: #22302a;
+    --ink: #edf3ef;
+    --ink-2: #c4cfc9;
+    --muted: #92a39b;
+    --line: #28362f;
+    --line-strong: #3a4a42;
+    --brand: #59d7b5;
+    --brand-hover: #82e6cb;
+    --brand-ink: #05221a;
+    --brand-soft: #12352c;
+    --brand-soft-ink: #96ecd4;
+    --accent: #f3b75f;
+    --accent-hover: #f8c982;
+    --accent-ink: #2a1b02;
+    --accent-soft: #39290f;
+    --accent-soft-ink: #f7ca88;
+    --danger: #ff8a80;
+    --danger-hover: #ffaea6;
+    --danger-btn-bg: #a9352c;
+    --danger-btn-hover: #bf3f35;
+    --danger-btn-ink: #ffeceb;
+    --danger-soft: #3c1714;
+    --danger-soft-ink: #ffb4ad;
+    --warning: #f3c365;
+    --warning-soft: #3a2b0c;
+    --warning-soft-ink: #f8d795;
+    --success: #6ee7b7;
+    --success-soft: #10372b;
+    --success-soft-ink: #9af0cf;
+    --info: #9bc7fb;
+    --info-soft: #162a44;
+    --info-soft-ink: #bcd9fc;
+    --focus: #fcd34d;
+    --overlay: rgba(0, 0, 0, 0.68);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.7),
+      0 2px 8px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 34px 80px -30px rgba(0, 0, 0, 0.85),
+      0 10px 26px -14px rgba(0, 0, 0, 0.5);
+    --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    --hero-glow: rgba(89, 215, 181, 0.16);
+
+    --st-reported-bg: #172a3e;
+    --st-reported-ink: #a8cdf0;
+    --st-reported-dot: #6aa9e0;
+    --st-assigned-bg: #242145;
+    --st-assigned-ink: #c2bdfa;
+    --st-assigned-dot: #8c85ef;
+    --st-in-progress-bg: #3a2c0c;
+    --st-in-progress-ink: #f7ce7e;
+    --st-in-progress-dot: #e3a62e;
+    --st-on-hold-bg: #3d2113;
+    --st-on-hold-ink: #f6b895;
+    --st-on-hold-dot: #e77c42;
+    --st-resolved-bg: #10382c;
+    --st-resolved-ink: #93efcd;
+    --st-resolved-dot: #3bc59d;
+    --st-closed-bg: #202c27;
+    --st-closed-ink: #b4c3bc;
+    --st-closed-dot: #8ba198;
+    --st-reopened-bg: #3e1815;
+    --st-reopened-ink: #ffb0a8;
+    --st-reopened-dot: #f26a5f;
+
+    --sev-low-bg: #202a26;
+    --sev-low-ink: #b7c4bd;
+    --sev-medium-bg: #172a3e;
+    --sev-medium-ink: #a8cdf0;
+    --sev-high-bg: #3d2113;
+    --sev-high-ink: #f6b895;
+    --sev-emergency-bg: #e5483b;
+    --sev-emergency-ink: #1a0604;
+  }
+}

@@ -1,0 +1,54 @@
+const assert=require('node:assert/strict');
+module.exports=async db=>{
+ const ids={admin:'11111111-1111-4111-8111-111111111111',tech:'22222222-2222-4222-8222-222222222222',otherTech:'33333333-3333-4333-8333-333333333333',resident:'44444444-4444-4444-8444-444444444444',other:'55555555-5555-4555-8555-555555555555'};
+ let checks=0;
+ async function as(role){await db.exec('reset role');await db.query("select set_config('request.jwt.claim.sub',$1,false)",[role?ids[role]:'']);await db.exec('set role '+(role?'authenticated':'anon'));}
+ async function ok(sql,args=[]){checks++;return (await db.query(sql,args)).rows;}
+ async function denied(sql,args=[]){checks++;await assert.rejects(()=>db.query(sql,args), undefined, 'Expected denial: '+sql);}
+ await as('resident');let [ticket]=await ok("select * from public.create_ticket('Block A','2','201','room','plumbing','high','Regression test leak','Water is leaking from the pipe beneath the sink.')");const id=ticket.id;
+ await denied("update tickets set status='closed' where id=$1",[id]);
+ await denied("update profiles set role='admin' where id=$1",[ids.resident]);
+ await denied("select public.assign_ticket($1,$2,null)",[id,ids.tech]);
+ await denied("select public.resident_confirm_close($1,null,null)",[id]);
+ await denied("select public.attach_ticket_photos($1,array['someone-else/photo.jpg'])",[id]);
+ await ok("insert into storage.objects(bucket_id,name,owner_id) values ('ticket-photos',$1,$2)",[id+'/test-photo.jpg',ids.resident]);
+ await ok("select public.attach_ticket_photos($1,array[$2])",[id,id+'/test-photo.jpg']);
+ assert.equal((await ok("delete from storage.objects where name=$1 returning name",[id+'/test-photo.jpg'])).length,0);
+ await ok("insert into storage.objects(bucket_id,name,owner_id) values ('ticket-photos',$1,$2)",[id+'/unused-photo.jpg',ids.resident]);
+ assert.equal((await ok("delete from storage.objects where name=$1 returning name",[id+'/unused-photo.jpg'])).length,1);
+ await as('otherTech');await denied("select public.add_work_log($1,'Unauthorized work log',null,'{}')",[id]);
+ await as('other');assert.equal((await ok('select * from tickets where id=$1',[id])).length,0);
+ await denied("select public.add_ticket_note($1,'Unauthorized note')",[id]);
+ await as('admin');await ok("select public.assign_ticket($1,$2,current_date+1)",[id,ids.tech]);
+ await denied("update profiles set is_active=false where id=$1",[ids.admin]);
+ await as('otherTech');assert.equal((await ok('select * from tickets where id=$1',[id])).length,0);
+ await denied("select public.technician_update_status($1,'in_progress',null,null,'{}')",[id]);
+ await as('tech');await denied("select public.technician_update_status($1,'resolved','Fixed the pipe',null,'{}')",[id]);
+ await ok("select public.technician_update_status($1,'in_progress',null,null,'{}')",[id]);
+ await denied("select public.technician_update_status($1,'on_hold','',null,'{}')",[id]);
+ await ok("select public.technician_update_status($1,'on_hold','Waiting for a replacement pipe',null,'{}')",[id]);
+ await ok("select public.technician_update_status($1,'in_progress',null,null,'{}')",[id]);
+ await denied("select public.technician_update_status($1,'resolved','short',null,'{}')",[id]);
+ await ok("select public.technician_update_status($1,'resolved','Replaced the leaking pipe and tested the seal.','1 pipe','{}')",[id]);
+ await as('other');await denied("select public.resident_reject($1,'The pipe is still leaking.')",[id]);
+ await as('resident');await ok("select public.resident_reject($1,'The pipe is still leaking.')",[id]);
+ assert.equal((await ok('select reopen_count from tickets where id=$1',[id]))[0].reopen_count,1);
+ await as('tech');await ok("select public.technician_update_status($1,'in_progress',null,null,'{}')",[id]);
+ await ok("select public.technician_update_status($1,'resolved','Replaced the seal and verified no leaks remain.',null,'{}')",[id]);
+ await as('resident');await ok("select public.resident_confirm_close($1,5::smallint,'Good repair')",[id]);
+ assert.equal((await ok('select status,rating from tickets where id=$1',[id]))[0].status,'closed');
+ await denied("update ticket_events set message='Changed' where ticket_id=$1",[id]);
+ await denied("delete from ticket_events where ticket_id=$1",[id]);
+ await denied("update notifications set body='Forged update' where user_id=$1",[ids.resident]);
+ await ok('update notifications set is_read=true where user_id=$1',[ids.resident]);
+ await as('admin');await ok("select public.admin_reopen($1,'Resident disputed the final repair.')",[id]);
+ const reports=(await ok('select public.admin_reports(null,null) as report'))[0].report;assert.ok(reports.totals.total>=16);
+ await ok('update profiles set is_active=false where id=$1',[ids.resident]);
+ await as('resident');assert.equal((await ok('select * from tickets')).length,0);
+ await denied("select public.resident_confirm_close($1,null,null)",[id]);
+ await denied("select public.create_ticket('A','1','1','room','plumbing','low','Another test','This is a test description.')");
+ await db.exec('reset role');await db.query("select set_config('request.jwt.claim.sub','',false)");await db.exec('set role authenticated');
+ await denied("select public.resident_confirm_close($1,null,null)",[id]);
+ await as(null);await denied("select public.resident_confirm_close($1,null,null)",[id]);await denied('select * from tickets');
+ console.log(`Passed ${checks} lifecycle and permission checks`);
+};

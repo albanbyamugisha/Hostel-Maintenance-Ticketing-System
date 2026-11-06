@@ -1,0 +1,52 @@
+{
+  "id": "./",
+  "name": "HostelCare — Maintenance Ticketing",
+  "short_name": "HostelCare",
+  "description": "Report hostel maintenance issues, track repairs and keep every job accountable.",
+  "start_url": "./#/",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#f5f2ea",
+  "theme_color": "#0b5d4b",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Report an issue",
+      "short_name": "Report",
+      "description": "Open the new ticket form",
+      "url": "./#/tickets/new",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My tickets",
+      "short_name": "Tickets",
+      "description": "See the tickets you have reported",
+      "url": "./#/tickets",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
