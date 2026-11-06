@@ -25,6 +25,7 @@ Open [http://localhost:8080](http://localhost:8080). No Supabase project, databa
 | Murungi collins | collins@hostel.com | Technician — general |
 | Nimusiima Janepher | janepher@hostel.com | Technician — general |
 | Ssekajigo Elvis Mark | mark@hostel.com | Technician — general |
+| Byamugisha Alban | alban@hostel.com
 
 Initial passwords are configured as supplied by the project owner. Alison and Annibow use the separately confirmed initial passwords. Passwords are not displayed on the login page. Cyril's `.con` email is intentional and matches the supplied account identifier. Technician specialties are initial defaults and can be changed by the administrator.
 
